@@ -1,0 +1,8 @@
+MySQL-python==1.2.5
+Django==1.11.2
+wefacts==0.1.10
+geopy==1.11.0
+Geohash==1.0
+pandas==0.19.2
+numpy==1.12.0
+python-dateutil==2.6.0

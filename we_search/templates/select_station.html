@@ -1,0 +1,5 @@
+<form action="/select_station/{{order_id}}/" method='post'>
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type='submit' value='Download'>
+</form>
