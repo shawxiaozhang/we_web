@@ -1,5 +1,14 @@
 <form action="/select_station/{{order_id}}/" method='post'>
     {% csrf_token %}
+    <h1>Select stations for weather downloading.</h1>
+    <p>Distance, Station GPS: Station ID, Station Name</p>
     {{ form.as_p }}
     <input type='submit' value='Download'>
+    <p>Format of downloaded csv file, see <a href="https://shawxiaozhang.github.io/wefacts/" target="_blank">here</a>. </p>
+    <p>Tips: Station Ids not starting with 999999 and not ending with 99999 have the richest weather recordings.</p>
+    <p>Tips: Station at airports generally have the richest weather recordings.</p>
+
+    <h1>Questions and Discussions</h1>
+    <p>Post your question in our Google Group <a href="https://groups.google.com/forum/#!forum/wefacts-users" target="_blank">here</a>.</p>
+
 </form>

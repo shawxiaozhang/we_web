@@ -43,7 +43,7 @@ class StationChoiceForm(forms.Form):
         self.fields['selected_stations'] = forms.MultipleChoiceField(
             choices=stations,
             widget=forms.CheckboxSelectMultiple(),
-            label='Select weather stations',
+            label='Select weather stations to download',
             required=False
         )
         self.metadata = {
