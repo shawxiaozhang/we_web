@@ -3,7 +3,10 @@
 /result/
 /dist/
 /local/
+/media/
+/static/
 /*.egg-info
+we_search/migrations/
 
 # Compiled source #
 ###################

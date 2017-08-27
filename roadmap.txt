@@ -1,35 +1,24 @@
-modules
-
 wefacts
-- input: station_id, year, options, local_dir(optional, search local file first)
-- output: csv file locations
-
-- ? clean csv files routinely
-
 - input: address, station databases (optional, so that we can maintain a local db)
 - output: nearby station ids, GPSs, distances, properties
 
-web
+Web
+- Enable initial choice of recommended weather stations.
 - sql: record csv file locations
 
-- each request
--- address to geo, geo to station ids
--- read sql, if csv file exists, load csv; if csv not exists, call wefacts
-
-- request count
--- if request count % 100, then clean all files
-
-- add model stations
-
 Todos
-- the form action to a selection form, then the selection action to the download link
-- allow multiple addresses
+- weather station quality check
+-- by data availability, distance
+-- station quality cache
+-- add a button "station quality check" (along with Download)
+
+- clean csv/zip files routinely; clear csv according to access timestamp (i.e. popularity)
+-- request count; if request count % 100, then clean all files
+- allow batch addresses download
 -- may need to re-organize database (same order-id, multiple addresses)
 -- https://stackoverflow.com/questions/6142025/dynamically-add-field-to-a-form
 -- then use time as the only primary id
 - change to Google geo parser
-- web UI design
-- support multiple address (add multiple addresses)
-- local weather files migrate to local sql (or NoSQL)
+- more friendly web UI
 - add cache for station data (id, name, lat, lng, record types)
 - add compress in download link (to save bandwidth)

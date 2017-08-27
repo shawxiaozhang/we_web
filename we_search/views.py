@@ -16,13 +16,13 @@ from django.utils.encoding import smart_str
 from wefacts import wefacts
 
 import util
-from .models import Order
-from .forms import OrderForm, StationChoiceForm
+from .models import Order, Document
+from .forms import OrderForm, StationChoiceForm, DocumentForm
 
 
 def get_order(request):
     # if this is a POST request we need to process the form data
-    if request.method == 'POST':
+    if request.method == 'POST' and 'search' in request.POST:
         # create a form instance and populate it with data from the request:
         form = OrderForm(request.POST)
         # check whether it's valid:
@@ -39,6 +39,19 @@ def get_order(request):
             order.save()
             # redirect to a new URL:
             return HttpResponseRedirect(reverse('select_station', kwargs={'order_id': order.id}))
+    elif request.method == 'POST' and 'upload_address_list' in request.POST:
+        form = DocumentForm()
+    elif request.method == 'POST' and 'upload' in request.POST:
+        form = DocumentForm(request.POST, request.FILES)
+        if form.is_valid():
+            file_content = request.FILES['address_file'].read()
+            doc = Document(address_file=request.FILES['address_file'])
+            # TODO schema for address list: store in sql or directory
+            doc.save()
+            addresses = '; '.join(line for line in file_content.splitlines())
+            form = OrderForm(initial={'weather_address': addresses})
+        else:
+            form = OrderForm()
     # if a GET (or any other method) we'll create a blank form
     else:
         form = OrderForm()
@@ -54,35 +67,51 @@ def select_station(request, order_id):
             # download raw data for selected stations
             selected_stations = form.cleaned_data.get('selected_stations')
             metadata = form.metadata
-            station2location = {}
-            for s in selected_stations:
-                station2location[s] = metadata['station2location'][s]
-            gps = metadata['gps']
-            weather_address = metadata['weather_address']
-            local_tz = metadata['local_tz']
-            date_start_local = metadata['date_start_local']
-            date_end_local = metadata['date_end_local']
-            wefacts.download_raw_weather(
-                station2location.keys(), gps, date_start_local, date_end_local, local_tz, util.DIR_RAW)
-            # dump weather results
-            station2csv, _ = wefacts.dump_weather_result(
-                station2location, gps, weather_address, date_start_local, date_end_local, local_tz,
-                dir_raw=util.DIR_RAW, dir_result=util.DIR_RESULT)
-            # zip results
-            # todo delete csv results and only keep a zip
+
+            station2csv = _compose_result_files(selected_stations, metadata)
+
             zip_file_path = '%s%s.zip' % (util.DIR_RESULT, order_id)
             zipf = zipfile.ZipFile(zip_file_path, 'w', zipfile.ZIP_DEFLATED)
             path_root = ''
             for f in station2csv.values():
                 zipf.write(os.path.join(path_root, f), f)
             zipf.close()
-            # todo delete zip file routinely
+
             # redirect to a new URL:
             return HttpResponseRedirect(reverse('download', kwargs={'order_id': order_id}))
     else:
         form = StationChoiceForm(order_id=order_id)
 
     return render(request, 'select_station.html', {'form': form, 'order_id': order_id})
+
+
+def _compose_result_files(selected_stations, metadata_list):
+    if metadata_list is None or len(metadata_list) == 0:
+        return {'no_station_found': 'README.txt'}
+
+    station2csv = {}
+    for meta in metadata_list:
+        if meta is None:    # TODO weather add a note to users
+            continue
+        station2location = {s: l for s, l in meta['station2location'].items() if s in selected_stations}
+        gps = meta['gps']
+        weather_address = meta['weather_address']
+        local_tz = meta['local_tz']
+        start_date_local = meta['start_date_local']
+        end_date_local = meta['end_date_local']
+
+        wefacts.download_raw_weather(station2location.keys(), start_date_local, end_date_local,
+                                     local_tz, util.DIR_RAW)
+
+        # station2quality = wefacts.check_station_quality(station2location.keys(), start_date_local, end_date_local,
+        #                                                 local_tz, util.DIR_RAW)
+
+        s2csv, _ = wefacts.compose_weather_result(
+            station2location, gps, weather_address, start_date_local, end_date_local, local_tz,
+            dir_raw=util.DIR_RAW, dir_result=util.DIR_RESULT)
+        station2csv.update(s2csv)
+
+    return station2csv
 
 
 def download(request, order_id):
@@ -98,34 +127,10 @@ def _send_zip_file(request, order_id):
     file_name = '%s.zip' % order_id
     file_path = '%s%s' % (util.DIR_RESULT, file_name)
     wrapper = FileWrapper(file(file_path))
-    # response = HttpResponse(wrapper, content_type='text/plain')
+    # TODO: on mobile: response = HttpResponse(wrapper, content_type='text/plain')
     response = HttpResponse(wrapper, content_type='application/force-download')
     response['Content-Disposition'] = 'attachment; filename=%s' % 'wefacts-'+smart_str(file_name)
     response['Content-Length'] = os.path.getsize(file_path)
-    return response
-
-
-def _send_zipfile(request, file_list):
-    """
-    Create a ZIP file on disk and transmit it in chunks of 8KB,
-    without loading the whole file into memory. A similar approach can
-    be used for large dynamic PDF files.
-    """
-    for file_name in file_list:
-        print file_name
-
-    path_root = 'test'
-    file_names = ['xyz.xyz', 'test1.csv']
-    zip_name = 'wefacts-order-%d.zip' % 1
-
-    s = StringIO.StringIO()
-    zipf = zipfile.ZipFile(s, 'w', zipfile.ZIP_DEFLATED)
-    for f in file_names:
-        zipf.write(os.path.join(path_root, f), f)
-    zipf.close()
-
-    response = HttpResponse(s.getvalue(), content_type='application/x-zip-compressed')
-    response['Content-Disposition'] = 'attachment; filename=%s' % zip_name
     return response
 
 

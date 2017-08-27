@@ -46,3 +46,7 @@ class Station(models.Model):
         return '%s-%s' \
                % (self.station_usaf,
                   self.station_wban)
+
+
+class Document(models.Model):
+    address_file = models.FileField(upload_to='address_file/%Y/%m/%d')
