@@ -1,20 +1,36 @@
-<form action = "/get_order/" method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    <h1>WeFacts</h1>
-    <p>Wefacts (weather-facts) makes it easy for researchers and developers to obtain historical weather data including temperature, wind speed, wind direction, etc.</p>
-    <p>Weather source is from National Oceanic and Atmospheric Administration. Details <a href="https://shawxiaozhang.github.io/wefacts/" target="_blank">here</a>. </p>
+{% load staticfiles %}
 
-    <h1>Weather Station Search</h1>
-    <p>Step 1: Type in an address or zip code, e.g. "5000 Forbes Ave Pittsburgh 15213" or "15213", or simply "Pittsburgh"</p>
-    <p>Step 2: Set the start_date and end_date for your weather data request in format "YYYY-MM-DD".</p>
-    <p>Step 3: Press button Search, then you are there!</p>
-    {{ form }}
-    <p></p>
-    <input type="submit" value="Search" name="search"/>
-    <input type="submit" value="Select local file for many addresses" name="upload_address_list"/>
-    <input type="submit" value="Upload" name="upload"/>
-    <p>*The email address is for sending you updates about WeFacts.</p>
+<html>
+    <link rel="stylesheet" href="{% static 'css/get_order.css' %}">
+    <head>
+        <title>WeFacts</title>
+    </head>
+    <body>
+        <div>
+            <h1>WeFacts</h1>
+            <p>Wefacts (weather-facts) makes it easy for researchers and developers to obtain historical weather data including temperature, wind speed, wind direction, etc.</p>
+            <p>Historical weather is globally covered, with data source from National Oceanic and Atmospheric Administration. See details <a href="https://shawxiaozhang.github.io/wefacts/" target="_blank">here</a>. </p>
+        </div>
 
-    <h1>Questions and Discussions</h1>
-    <p>Post your question in our Google Group <a href="https://groups.google.com/forum/#!forum/wefacts-users" target="_blank">here</a>.</p>
-</form>
+        <div>
+            <form action = "/get_order/" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <h1>Weather Station Search</h1>
+                <p>Step 1: Type in the address or zip code, e.g. "5000 Forbes Ave Pittsburgh 15213" or "15213", or simply "Pittsburgh".</p>
+                <p>* Separate multiple addresses by ";", or click button "Select local file" then "Upload".</p>
+                <p>Step 2: Set the start_date and end_date for your weather data request in format "YYYY-MM-DD".</p>
+                <p>Step 3: Press button "Search", then here we go!</p>
+                {{ form }}
+                <p></p>
+                <input type="submit" value="Search" name="search"/>
+                <input type="submit" value="Select local file for many addresses" name="upload_address_list"/>
+                <input type="submit" value="Upload" name="upload"/>
+                <p>*The email address is for sending you updates about WeFacts.</p>
+
+                <h1>Questions and Discussions</h1>
+                <p>Post your question in our Google Group <a href="https://groups.google.com/forum/#!forum/wefacts-users" target="_blank">here</a>.
+                Comments, suggestions, contributions are all welcomed.</p>
+            </form>
+        </div>
+    </body>
+</html>

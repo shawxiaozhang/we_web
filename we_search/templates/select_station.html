@@ -1,14 +1,34 @@
-<form action="/select_station/{{order_id}}/" method='post'>
-    {% csrf_token %}
-    <h1>Select stations for weather downloading.</h1>
-    <p>Distance, Station GPS: Station ID, Station Name</p>
-    {{ form.as_p }}
-    <input type='submit' value='Download'>
-    <p>Format of downloaded csv file, see <a href="https://shawxiaozhang.github.io/wefacts/" target="_blank">here</a>. </p>
-    <p>Tips: Station Ids not starting with 999999 and not ending with 99999 have the richest weather recordings.</p>
-    <p>Tips: Station at airports generally have the richest weather recordings.</p>
+{% load staticfiles %}
 
-    <h1>Questions and Discussions</h1>
-    <p>Post your question in our Google Group <a href="https://groups.google.com/forum/#!forum/wefacts-users" target="_blank">here</a>.</p>
+<html>
+    <link rel="stylesheet" href="{% static 'css/get_order.css' %}">
+    <head>
+        <title>Select Weather Reports</title>
+    </head>
+    <body>
+        <div>
+            <h1>About Weather Data</h1>
+            <p>Fields of weather reports, see <a href="https://shawxiaozhang.github.io/wefacts/" target="_blank">here</a>. </p>
+            <p>Tips: Weather stations at international airports generally have higher qualities.</p>
+            <p>Tips: "-9999" indicates data unavailability; try a different weather station.</p>
+        </div>
 
-</form>
+        <div>
+            <h1>Select Weather Stations</h1>
+            <p>Step 1: Select weather stations.</p>
+            <p>* format of each line: "Address: Station ID, GPS, distance, Station Name"</p>
+            <p>* the initially selected stations are recommended by wefacts</p>
+            <p>Step 2: Press button "Download".</p>
+            <form action="/select_station/{{order_id}}/" method='post'>
+                {% csrf_token %}
+                {{ form.as_p }}
+                <input type='submit' value='Download'>
+            </form>
+        </div>
+
+        <div>
+            <h1>Questions and Discussions</h1>
+            <p>Post your question in our Google Group <a href="https://groups.google.com/forum/#!forum/wefacts-users" target="_blank">here</a>.</p>
+        </div>
+    </body>
+</html>
