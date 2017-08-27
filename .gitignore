@@ -7,7 +7,6 @@
 /static/
 /*.egg-info
 we_search/migrations/
-we_search/static/
 
 # Compiled source #
 ###################
