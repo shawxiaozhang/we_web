@@ -464,6 +464,24 @@ h1, h2, h3, h4, h5, h6 {
   margin: 0 0 0 450px;
   display: block;
 }
+input[type=submit] {
+    text-decoration: none;
+    font-family:".LucidaGrandeUI", "Lucida Grande", "Lucida sans unicode";
+    color: black;
+    font-size: 16px;
+    font-weight: 450;
+    padding: 3px 30px;
+    border:1px solid #9C9C9C;
+    margin: 10px 0 5px 0;
+    display: inline-block;
+    background-image: -webkit-linear-gradient(
+    #ffffff 0%, #F6F6F6 	30%,
+    #F3F3F3 45%, #EDEDED 	60%,
+    #eeeeee 100%);
+    border-radius: 3px;
+    cursor: default;
+    box-shadow: 0px 0px 1px rgba(0,0,0,0.20);
+}
 
 .slant {
   position: absolute;
