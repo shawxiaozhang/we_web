@@ -9,19 +9,23 @@ from models import Order
 
 
 class OrderForm(forms.Form):
-    weather_address = forms.CharField(label='Address', max_length=100000, required=False)
-    weather_start_date = forms.DateField(label='Start Date',
+    weather_address = forms.CharField(label='Address', max_length=100000, required=False,
+                                      widget=forms.TextInput(attrs={'size': 38}))
+    weather_start_date = forms.DateField(label='From',
                                          input_formats=['%Y-%m-%d'],
-                                         initial=date.today()-timedelta(days=365))
-    weather_end_date = forms.DateField(label='End Date',
+                                         initial=date.today()-timedelta(days=14),
+                                         widget=forms.TextInput(attrs={'size': 12}))
+    weather_end_date = forms.DateField(label='To',
                                        input_formats=['%Y-%m-%d'],
-                                       initial=date.today()-timedelta(days=358))
+                                       initial=date.today()-timedelta(days=7),
+                                       widget=forms.TextInput(attrs={'size': 12}))
     customer_email = forms.EmailField(label='Your Email (optional)', required=False)
 
 
 class DocumentForm(forms.Form):
     address_file = forms.FileField(
-        label='Upload a text file (each line is an address)'
+        label='Upload address list (separated by lines)    ',
+        widget=forms.ClearableFileInput(attrs={'size': 40})
     )
 
 

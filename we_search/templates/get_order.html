@@ -1,36 +1,51 @@
 {% load staticfiles %}
 
 <html>
-    <link rel="stylesheet" href="{% static 'css/get_order.css' %}">
+	<link href='https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,300,600,400italic,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
     <head>
         <title>WeFacts</title>
     </head>
     <body>
-        <div>
-            <h1>WeFacts</h1>
-            <p>Wefacts (weather-facts) makes it easy for researchers and developers to obtain historical weather data including temperature, wind speed, wind direction, etc.</p>
-            <p>Historical weather is globally covered, with data source from National Oceanic and Atmospheric Administration. See details <a href="https://shawxiaozhang.github.io/wefacts/" target="_blank">here</a>. </p>
-        </div>
 
-        <div>
+    <section id="fh5co-home" data-section="home" style="background-image: url({% static 'images/full_image_2.jpg' %});" data-stellar-background-ratio="0.5">
+		<div class="gradient"></div>
+			<div class="text-wrap">
+				<div class="text-inner">
+
+            <h1>Weather Facts</h1>
+            <h2>Makes it easy and free to obtain historical weather data.</h2>
+            <p1>Historical weather data is globally covered, see <a href="https://shawxiaozhang.github.io/wefacts/" target="_blank">details</a>. </p1>
+
+            <h1>Weather Search</h1>
             <form action = "/get_order/" method="post" enctype="multipart/form-data">
                 {% csrf_token %}
-                <h1>Weather Station Search</h1>
-                <p>Step 1: Type in the address or zip code, e.g. "5000 Forbes Ave Pittsburgh 15213" or "15213", or simply "Pittsburgh".</p>
-                <p>* Separate multiple addresses by ";", or click button "Select local file" then "Upload".</p>
-                <p>Step 2: Set the start_date and end_date for your weather data request in format "YYYY-MM-DD".</p>
-                <p>Step 3: Press button "Search", then here we go!</p>
-                {{ form }}
+                {{ form.weather_address.label }}    {{ form.weather_address }}
+                {{ form.weather_start_date.label }}    {{ form.weather_start_date }}
+                {{ form.weather_end_date.label }}    {{ form.weather_end_date }}
+                {{ form.address_file.label}}    {{ form.address_file}}
                 <p></p>
-                <input type="submit" value="Search" name="search"/>
-                <input type="submit" value="Select local file for many addresses" name="upload_address_list"/>
-                <input type="submit" value="Upload" name="upload"/>
-                <p>*The email address is for sending you updates about WeFacts.</p>
+                <input type="submit" value="Search" name="search"
+                       style="height:60px; width:120px; font-size:60px; margin: 20px 0 5px 0;"/>
+                <p><br></p>
+                <p1> Multiple addresses are separated by semicolon, e.g. "5000 Forbes Ave Pittsburgh; 94043; Beijing". Or try buttons below.</p1>
+                <p></p>
+                <input type="submit" value="Select address list" name="upload_address_list"
+                       style="height:60px; width:200px; font-size:60px; margin: 5px 0 5px 0;"/>
+                <input type="submit" value="Upload" name="upload"
+                       style="height:60px; width:120px; font-size:60px; margin: 5px 0 5px 0;"/>
+                <p></p>
 
-                <h1>Questions and Discussions</h1>
-                <p>Post your question in our Google Group <a href="https://groups.google.com/forum/#!forum/wefacts-users" target="_blank">here</a>.
-                Comments, suggestions, contributions are all welcomed.</p>
             </form>
-        </div>
+
+            <h1>Questions and Discussions</h1>
+            <p1>Questions, comments, contributions are welcomed, see <a href="https://groups.google.com/forum/#!forum/wefacts-users" target="_blank">Google Group</a>.
+            </p1>
+
+
+				</div>
+		</div>
+        </section>
     </body>
 </html>
